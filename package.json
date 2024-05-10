@@ -1,0 +1,45 @@
+{
+    "name": "share_your_cloning_frontend",
+    "homepage": "./",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+        "@reduxjs/toolkit": "^2.2.4",
+        "@teselagen/bio-parsers": "^0.4.15",
+        "@teselagen/ove": "^0.5.2",
+        "@teselagen/range-utils": "^0.3.8",
+        "@teselagen/sequence-utils": "^0.3.24",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-redux": "^8.1.1",
+        "redux": "^5.0.1",
+        "redux-form": "^8.3.10",
+        "redux-thunk": "^2.4.2"
+    },
+    "scripts": {
+        "start": "yarn run vite --force --port 3000",
+        "build": "vite build",
+        "test": "vitest"
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "devDependencies": {
+        "@redux-devtools/extension": "^3.3.0",
+        "@vitejs/plugin-react": "^4.0.3",
+        "jsdom": "^22.1.0",
+        "redux-devtools-extension": "^2.13.9",
+        "vite": "4.3.6",
+        "vitest": "^0.34.6"
+    },
+    "packageManager": "yarn@3.6.4"
+}
