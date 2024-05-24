@@ -2,13 +2,15 @@ import React from 'react'
 import { SimpleCircularOrLinearView } from '@teselagen/ove';
 import { createVectorEditor } from '@teselagen/ove';
 import defaultMainEditorProps from './defaultMainEditorProps';
+import { tidyUpSequenceData } from '@teselagen/sequence-utils';
+
 
 function EditorComparison({ strand, circular }) {
-    const seq = {
+    const seq = tidyUpSequenceData({
         circular,
         sequence: "gagagagag",
         features: [{ id: "lalala", name: "Mr Feature", start: 1, end: 5, strand }]
-    }
+    })
     const nodeRef = React.useRef(null);
     React.useEffect(() => {
         const editorProps = {
