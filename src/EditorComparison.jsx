@@ -10,7 +10,7 @@ function EditorComparison({ strand, circular, useTidyUpSequenceData }) {
     // Read a genbank file and display it in the main editor
     const { parsedSequence } = genbankToJson(`LOCUS       Untitled_Sequence           9 bp    DNA     circular SYN 03-JUN-2024
     FEATURES             Location/Qualifiers
-         misc_feature    complement(2..6)
+         CDS    complement(2..6)
                          /label="Mr Feature"
          misc_feature    2..6
                          /label="Mr Feature 2"
@@ -19,8 +19,8 @@ function EditorComparison({ strand, circular, useTidyUpSequenceData }) {
     //`)[0];
     // Change the strand and circularity of the sequence based on props
     parsedSequence.circular = circular;
-    parsedSequence.features[0].strand = strand;
-    parsedSequence.features[0].forward = strand === 1;
+    // parsedSequence.features[0].strand = strand;
+    // parsedSequence.features[0].forward = strand === 1;
     // Use / not use tidyUpSequenceData based on props
     const processedSequence = useTidyUpSequenceData ? tidyUpSequenceData(parsedSequence) : parsedSequence;
 
