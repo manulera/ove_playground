@@ -12,12 +12,15 @@ function EditorComparison({ strand, circular, useTidyUpSequenceData }) {
     FEATURES             Location/Qualifiers
          misc_feature    complement(2..6)
                          /label="Mr Feature"
+         misc_feature    2..6
+                         /label="Mr Feature 2"
     ORIGIN      
             1 gagagagag     
     //`)[0];
     // Change the strand and circularity of the sequence based on props
     parsedSequence.circular = circular;
     parsedSequence.features[0].strand = strand;
+    parsedSequence.features[0].forward = strand === 1;
     // Use / not use tidyUpSequenceData based on props
     const processedSequence = useTidyUpSequenceData ? tidyUpSequenceData(parsedSequence) : parsedSequence;
 
