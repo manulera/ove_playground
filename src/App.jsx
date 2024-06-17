@@ -1,29 +1,27 @@
 import React from 'react';
-import EditorComparison from './EditorComparison';
-
+import exampleSequenceData from './exampleSequenceData';
+import { Editor, updateEditor } from '@teselagen/ove';
+import { tidyUpSequenceData } from '@teselagen/sequence-utils';
+import { useStore } from 'react-redux';
 
 function App() {
-  const [strand, setStrand] = React.useState(1)
-  const [circular, setCircular] = React.useState(false)
-  const [useTidyUpSequenceData, setUseTidyUpSequenceData] = React.useState(false)
-  const onButton1Click = () => {
-    setStrand((s) => -s)
-  }
-  const onButton2Click = () => {
-    setCircular((c) => !c)
-  }
-  const onButton3Click = () => {
-    setUseTidyUpSequenceData((u) => !u)
-  }
+  console.log('hehe')
+  const store = useStore();
+
+  React.useEffect(() => {
+    const editorProps = {
+      sequenceData: tidyUpSequenceData(exampleSequenceData),
+    };
+    updateEditor(store, 'mainEditor', editorProps)
+  }, []);
 
   return (
-    <>
-      <button onClick={onButton1Click}>Change strand</button>
-      <button onClick={onButton2Click}>Change linear/circular</button>
-      <button onClick={onButton3Click}>{!useTidyUpSequenceData && 'not' } using tidyUpSequenceData</button>
-      <EditorComparison strand={strand} circular={circular} useTidyUpSequenceData={useTidyUpSequenceData} />
-    </>
+    <div className="App">
+      <Editor {...{
+        editorName: 'mainEditor', height: '800',
+      }} />
+    </div>
   );
 }
 
-export default App;
+export default React.memo(App);
