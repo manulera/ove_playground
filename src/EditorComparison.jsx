@@ -6,7 +6,7 @@ import { tidyUpSequenceData } from '@teselagen/sequence-utils';
 import { genbankToJson } from '@teselagen/bio-parsers';
 
 
-function EditorComparison({ strand, circular, useTidyUpSequenceData }) {
+function EditorComparison({ hideFeature, hideAll }) {
     // Read a genbank file and display it in the main editor
     const { parsedSequence } = genbankToJson(`LOCUS       Untitled_Sequence           9 bp    DNA     circular SYN 03-JUN-2024
     FEATURES             Location/Qualifiers
@@ -18,11 +18,11 @@ function EditorComparison({ strand, circular, useTidyUpSequenceData }) {
             1 gagagagag     
     //`)[0];
     // Change the strand and circularity of the sequence based on props
-    parsedSequence.circular = circular;
-    parsedSequence.features[0].strand = strand;
-    parsedSequence.features[0].forward = strand === 1;
+    parsedSequence.circular = true;
+    parsedSequence.features[0].strand = 1;
+    parsedSequence.features[0].forward = 1;
     // Use / not use tidyUpSequenceData based on props
-    const processedSequence = useTidyUpSequenceData ? tidyUpSequenceData(parsedSequence) : parsedSequence;
+    const processedSequence = tidyUpSequenceData(parsedSequence);
 
     // Rendering code
     const nodeRef = React.useRef(null);
@@ -30,22 +30,23 @@ function EditorComparison({ strand, circular, useTidyUpSequenceData }) {
         const editorProps = {
             sequenceData: processedSequence,
             ...defaultMainEditorProps,
+            annotationVisibility: {
+                features: !hideAll,
+                featureTypesToHide: { misc_feature: hideFeature },
+            }
         };
         const editor = createVectorEditor(nodeRef.current, { editorName: 'mainEditor', height: '800' });
         editor.updateEditor(editorProps);
-    }, [parsedSequence, strand, circular]);
+    }, [parsedSequence, hideFeature]);
 
     return (
         <div className="App">
             <SimpleCircularOrLinearView
                 sequenceData={processedSequence}
                 editorName="previewEditor"
-                annotationLabelVisibility={{
-                    //set visibilities as you please
-                    features: true,
-                    parts: true,
-                    cutsites: false,
-                    primers: true
+                annotationVisibility={{
+                    features: !hideAll,
+                    featureTypesToHide: { misc_feature: hideFeature },
                 }}
             ></SimpleCircularOrLinearView>
             <div ref={nodeRef} />
