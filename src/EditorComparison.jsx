@@ -1,12 +1,12 @@
 import React from 'react'
-import { SimpleCircularOrLinearView } from '@teselagen/ove';
-import { createVectorEditor } from '@teselagen/ove';
+import { Editor, updateEditor } from '@teselagen/ove';
 import defaultMainEditorProps from './defaultMainEditorProps';
 import { tidyUpSequenceData } from '@teselagen/sequence-utils';
 import { genbankToJson } from '@teselagen/bio-parsers';
+import { useStore } from 'react-redux';
 
 
-function EditorComparison({ hideFeature, hideAll }) {
+function EditorComparison() {
     // Read a genbank file and display it in the main editor
     const { parsedSequence } = genbankToJson(`LOCUS       Untitled_Sequence           9 bp    DNA     circular SYN 03-JUN-2024
     FEATURES             Location/Qualifiers
@@ -18,38 +18,50 @@ function EditorComparison({ hideFeature, hideAll }) {
             1 gagagagag     
     //`)[0];
     // Change the strand and circularity of the sequence based on props
-    parsedSequence.circular = true;
-    parsedSequence.features[0].strand = 1;
-    parsedSequence.features[0].forward = 1;
-    // Use / not use tidyUpSequenceData based on props
     const processedSequence = tidyUpSequenceData(parsedSequence);
+    processedSequence.primers = [
+        {
 
+            type: "primer_bind",
+            strand: -1,
+            forward: false,
+            name: "T7",
+            start: 1,
+            end: 3,
+            annotationTypePlural: "primers",
+            id: "1",
+            color: "blue" // <<<<
+        },
+        {
+
+            type: "primer_bind",
+            strand: 1,
+            forward: true,
+            name: "blah",
+            start: 2,
+            end: 4,
+            annotationTypePlural: "primers",
+            id: "2",
+            color: "red" // <<<<
+        },
+    ];
+    const store = useStore();
     // Rendering code
     const nodeRef = React.useRef(null);
     React.useEffect(() => {
         const editorProps = {
             sequenceData: processedSequence,
             ...defaultMainEditorProps,
-            annotationVisibility: {
-                features: !hideAll,
-                featureTypesToHide: { misc_feature: hideFeature },
-            }
         };
-        const editor = createVectorEditor(nodeRef.current, { editorName: 'mainEditor', height: '800' });
-        editor.updateEditor(editorProps);
-    }, [parsedSequence, hideFeature]);
+        updateEditor(store, 'mainEditor', editorProps);
+        editorProps.sequenceData.primers.forEach(p => (p.color = 'green')) // <<<<
+        updateEditor(store, 'mainEditor2', editorProps);
+    }, [parsedSequence]);
 
     return (
         <div className="App">
-            <SimpleCircularOrLinearView
-                sequenceData={processedSequence}
-                editorName="previewEditor"
-                annotationVisibility={{
-                    features: !hideAll,
-                    featureTypesToHide: { misc_feature: hideFeature },
-                }}
-            ></SimpleCircularOrLinearView>
-            <div ref={nodeRef} />
+            <Editor editorName='mainEditor' height='400'/>
+            <Editor editorName='mainEditor2' height='400'/>
         </div>
     );
 }
