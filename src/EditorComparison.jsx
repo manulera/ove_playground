@@ -5,6 +5,11 @@ import { tidyUpSequenceData } from '@teselagen/sequence-utils';
 import { genbankToJson } from '@teselagen/bio-parsers';
 import { useStore } from 'react-redux';
 
+function onCopy(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('overwritten');
+}
 
 function EditorComparison() {
     // Read a genbank file and display it in the main editor
@@ -51,17 +56,18 @@ function EditorComparison() {
     React.useEffect(() => {
         const editorProps = {
             sequenceData: processedSequence,
+            onCopy,
             ...defaultMainEditorProps,
         };
         updateEditor(store, 'mainEditor', editorProps);
-        editorProps.sequenceData.primers.forEach(p => (p.color = 'green')) // <<<<
-        updateEditor(store, 'mainEditor2', editorProps);
+        // editorProps.sequenceData.primers.forEach(p => (p.color = 'green')) // <<<<
+        // updateEditor(store, 'mainEditor2', editorProps);
     }, [parsedSequence]);
 
     return (
         <div className="App">
-            <Editor editorName='mainEditor' height='400'/>
-            <Editor editorName='mainEditor2' height='400'/>
+            <Editor onCopy={onCopy} editorName='mainEditor' height='400'/>
+            {/* <Editor editorName='mainEditor2' height='400'/> */}
         </div>
     );
 }
