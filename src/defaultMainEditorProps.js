@@ -1,8 +1,7 @@
-import { act } from "react";
 
 export default {
     isFullscreen: false,
-    annotationVisibility: { reverseSequence: true, cutsites: false },
+    annotationVisibility: { reverseSequence: true, cutsites: false, chromatogram: true },
     ToolBarProps: {
         toolList: [
             'saveTool',
