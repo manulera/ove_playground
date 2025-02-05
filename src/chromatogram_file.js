@@ -1,5 +1,43 @@
 import { convertBasePosTraceToPerBpTrace } from "@teselagen/bio-parsers";
 
+function reverseComplementArray(arr) {
+    return arr.slice().reverse();
+}
+
+function reverseComplementChromatogramData(chromatogramData) {
+    const complement = { A: "T", T: "A", G: "C", C: "G", N: "N" };
+
+    function reverseComplementSequence(seq) {
+        return seq
+            .split("")
+            .reverse()
+            .map(base => complement[base] || base)
+            .join("");
+    }
+
+    chromatogramData.aTrace = reverseComplementArray(chromatogramData.aTrace);
+    chromatogramData.tTrace = reverseComplementArray(chromatogramData.tTrace);
+    chromatogramData.gTrace = reverseComplementArray(chromatogramData.gTrace);
+    chromatogramData.cTrace = reverseComplementArray(chromatogramData.cTrace);
+    chromatogramData.basePos = reverseComplementArray(chromatogramData.basePos);
+    chromatogramData.baseCalls = reverseComplementSequence(
+        chromatogramData.baseCalls
+    );
+
+    chromatogramData.baseTraces = reverseComplementArray(
+        chromatogramData.baseTraces
+    ).map(traceObj => {
+        return {
+            aTrace: reverseComplementArray(traceObj.aTrace),
+            tTrace: reverseComplementArray(traceObj.tTrace),
+            gTrace: reverseComplementArray(traceObj.gTrace),
+            cTrace: reverseComplementArray(traceObj.cTrace)
+        };
+    });
+
+    return chromatogramData;
+}
+
 const chromData = {
     aTrace: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 7, 15, 24, 33, 42,
         53, 66, 81, 100, 119, 137, 151, 159, 163, 164, 169, 178, 194, 216, 240, 262,
@@ -3729,7 +3767,7 @@ const chromData = {
     ]
 }
 
-const chromData2 = convertBasePosTraceToPerBpTrace(chromData);
+const chromData2 = convertBasePosTraceToPerBpTrace(reverseComplementChromatogramData(chromData));
 
 export default {
     sequenceData: {
