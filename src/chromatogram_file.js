@@ -1,3 +1,5 @@
+import { convertBasePosTraceToPerBpTrace } from "@teselagen/bio-parsers";
+
 const chromData = {
     aTrace: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 7, 15, 24, 33, 42,
         53, 66, 81, 100, 119, 137, 151, 159, 163, 164, 169, 178, 194, 216, 240, 262,
@@ -3727,11 +3729,13 @@ const chromData = {
     ]
 }
 
+const chromData2 = convertBasePosTraceToPerBpTrace(chromData);
+
 export default {
     sequenceData: {
         id: "1",
         name: "GFPvv50",
-        chromatogramData: chromData,
-        sequence: chromData.baseCalls.join(""),
+        chromatogramData: chromData2,
+        sequence: chromData2.baseCalls.join(""),
     },
 }
