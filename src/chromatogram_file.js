@@ -9,10 +9,8 @@ function reverseComplementChromatogramData(chromatogramData) {
 
     function reverseComplementSequence(seq) {
         return seq
-            .split("")
             .reverse()
-            .map(base => complement[base] || base)
-            .join("");
+            .map(base => complement[base] || base);
     }
 
     chromatogramData.aTrace = reverseComplementArray(chromatogramData.aTrace);
@@ -23,6 +21,7 @@ function reverseComplementChromatogramData(chromatogramData) {
     chromatogramData.baseCalls = reverseComplementSequence(
         chromatogramData.baseCalls
     );
+    chromatogramData.qualNums = reverseComplementArray(chromatogramData.qualNums)
 
     chromatogramData.baseTraces = reverseComplementArray(
         chromatogramData.baseTraces
@@ -3767,13 +3766,18 @@ const chromData = {
     ]
 }
 
-const chromData2 = convertBasePosTraceToPerBpTrace(reverseComplementChromatogramData(chromData));
+export default function getExampleData(reverseComplement) {
+    let chromData2 = convertBasePosTraceToPerBpTrace(chromData);
+    if (reverseComplement) {
+        chromData2 = reverseComplementChromatogramData(chromData2);
+    }
 
-export default {
-    sequenceData: {
-        id: "1",
-        name: "GFPvv50",
-        chromatogramData: chromData2,
-        sequence: chromData2.baseCalls.join(""),
-    },
+    return {
+        sequenceData: {
+            id: "1",
+            name: "GFPvv50",
+            chromatogramData: chromData2,
+            sequence: chromData2.baseCalls.join(""),
+        },
+    }
 }

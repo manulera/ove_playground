@@ -2,7 +2,8 @@ import React from 'react'
 import { Editor, updateEditor } from '@teselagen/ove';
 import defaultMainEditorProps from './defaultMainEditorProps';
 import { useStore } from 'react-redux';
-import chromatogram_file from './chromatogram_file';
+import getExampleData from './chromatogram_file';
+
 
 const extraProps = {
     annotationVisibility: {
@@ -39,22 +40,36 @@ const extraProps = {
 
 function Chromatogram() {
     const store = useStore();
+    const [reverseComplement, setReverseComplement] = React.useState(false);
     React.useEffect(() => {
+        const d = getExampleData(reverseComplement)
         const editorState = {
-            sequenceData: chromatogram_file.sequenceData,
+            sequenceData: d.sequenceData,
             ...extraProps,
 
         };
         updateEditor(store, 'mainEditor', editorState);
 
-    }, [store]);
+    }, [reverseComplement]);
 
     return (
-        <Editor
-            editorName='mainEditor'
-            {...defaultMainEditorProps}
-            height='800'
-        />
+        <div>
+            <button 
+                onClick={() => setReverseComplement(!reverseComplement)}
+                style={{
+                    margin: '10px',
+                    padding: '5px 10px',
+                    cursor: 'pointer'
+                }}
+            >
+                {reverseComplement ? 'Show Original' : 'Show Reverse Complement'}
+            </button>
+            <Editor
+                editorName='mainEditor'
+                {...defaultMainEditorProps}
+                height='800'
+            />
+        </div>
     );
 }
 
